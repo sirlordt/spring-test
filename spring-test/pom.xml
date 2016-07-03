@@ -1,0 +1,227 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+ <!-- 
+ 
+  create maven eclipse debug profile 
+  
+  Name: mvn exec-java spring-test 
+  Base directory: ${workspace_loc:/spring-test} 
+  Goal: exec:java -Dexec.mainClass="spring.application.CApplication" -Dexec.args=""  
+  
+  Remember!!!! In Tab Source Add the source project directory 
+ 
+ -->
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.tomasmoreno.test</groupId>
+  <artifactId>spring-test</artifactId>
+  <version>0.0.1</version>
+  
+  <properties>
+    
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring.version>4.3.0.RELEASE</spring.version>
+    <junit.version>3.8.1</junit.version>
+    <jdk.version>1.8</jdk.version>
+    
+    <target.finalName>${project.artifactId}</target.finalName>
+    <target.mainClass>spring.application.CApplication</target.mainClass>
+    
+  </properties>
+  
+  <packaging>jar</packaging>
+  
+  <name>Spring test project</name>
+
+  <description>Spring test project</description>
+  
+  <dependencies>
+    
+    <dependency>
+    
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+      
+    </dependency>
+        
+    <dependency>
+    
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-core</artifactId>
+       <version>${spring.version}</version>
+       
+    </dependency>
+    
+    <dependency>
+    
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-beans</artifactId>
+       <version>${spring.version}</version>
+       
+    </dependency>
+		        
+    <dependency>
+    
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-context-support</artifactId>
+       <version>${spring.version}</version>
+
+    </dependency>
+    
+  </dependencies>
+  
+  <build>
+
+    <finalName>${target.finalName}</finalName>
+
+    <plugins>
+
+      <!-- Compile java -->
+      <plugin>
+
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+
+        <configuration>
+
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+
+        </configuration>
+
+      </plugin>
+
+      <!-- Maven clean -->
+      <plugin>
+
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+
+        <configuration>
+          
+          <filesets>
+          
+            <fileset>
+          
+              <directory>${basedir}/src/main/webapp/WEB-INF/logs-aggregation/</directory>
+          
+              <includes>
+          
+                <include>*</include>
+                <include>*/**</include>
+          
+              </includes>
+          
+              <excludes>
+          
+                <exclude>**/example.log</exclude>
+                <exclude>**/example-important.log</exclude>
+          
+              </excludes>
+          
+              <followSymlinks>false</followSymlinks>
+          
+            </fileset>
+
+            <fileset>
+          
+              <directory>${basedir}/src/main/webapp/WEB-INF/logs/</directory>
+          
+              <includes>
+          
+                <include>*</include>
+                <include>*/**</include>
+          
+              </includes>
+          
+              <excludes>
+          
+                <exclude>**/example.log</exclude>
+                <exclude>**/example-important.log</exclude>
+          
+              </excludes>
+          
+              <followSymlinks>false</followSymlinks>
+          
+            </fileset>
+          
+          </filesets>
+
+        </configuration>
+
+      </plugin>
+
+      <!-- Make this jar executable -->
+      <plugin>
+
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+
+        <configuration>
+
+          <excludes>
+
+            <exclude>**/log4j.properties</exclude>
+
+          </excludes>
+
+          <archive>
+
+            <manifest>
+
+              <addClasspath>true</addClasspath>
+              <mainClass>${target.mainClass}</mainClass>
+              <classpathPrefix>libs/</classpathPrefix>
+
+            </manifest>
+
+          </archive>
+
+        </configuration>
+
+      </plugin>
+
+      <!-- Copy project dependency -->
+      <plugin>
+
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5.1</version>
+
+        <executions>
+
+          <execution>
+
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+
+            <goals>
+              
+              <goal>copy-dependencies</goal>
+      
+            </goals>
+
+            <configuration>
+
+              <!-- exclude junit, we need runtime dependency only -->
+              <includeScope>runtime</includeScope>
+              <outputDirectory>${project.build.directory}/libs/</outputDirectory>
+
+            </configuration>
+
+          </execution>
+
+        </executions>
+
+      </plugin>
+
+    </plugins>
+
+  </build>
+  
+</project>
